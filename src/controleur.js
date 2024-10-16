@@ -1,3 +1,5 @@
+'use strict';
+
 const {wintrans, connecterWintrans, deconnecterWintrans, executerSql} = require('./AccesWintrans');
 
 const getEtatWintrans = ((req, res) => {

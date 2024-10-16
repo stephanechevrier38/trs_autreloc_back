@@ -25,7 +25,7 @@ async function connecterWintrans() {
         wintrans.connexion = await oracledb.getConnection(config);
         wintrans.etat = 1;
     } catch (e) {
-        console.log('Erreur dans fonction AccessWintrans.ouvrirWintrans()')
+        console.log('Erreur dans fonction AccessWintrans.ouvrirWintrans() : ' + e);
         wintrans.etat = -1;
     }
 }
@@ -35,7 +35,7 @@ async function deconnecterWintrans() {
         await wintrans.connexion.close();
         wintrans.etat = 0;
     } catch (e) {
-        console.log('Erreur dans fonction AccessWintrans.fermerWintrans()')
+        console.log('Erreur dans fonction AccessWintrans.fermerWintrans() : ' + e);
         wintrans.etat = -1;
     }
 }
@@ -45,7 +45,7 @@ async function executerSql(requete) {
         debugger;
         return await wintrans.connexion.execute(requete, [], {outFormat: oracledb.OUT_FORMAT_OBJECT});
     } catch (e) {
-        console.log('Erreur dans fonction AccessWintrans.executerSql()')
+        console.log('Erreur dans fonction AccessWintrans.executerSql() : ' + e);
         return {};
     }
 }
