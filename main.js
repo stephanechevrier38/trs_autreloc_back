@@ -2,7 +2,9 @@
 
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const port = 3000;
+
 const products_routes = require('./src/routes.js');
 
 app.listen(port, () => {
@@ -10,4 +12,5 @@ app.listen(port, () => {
 });
 
 app.use(express.json());
+app.use(cors());
 app.use('/', products_routes);

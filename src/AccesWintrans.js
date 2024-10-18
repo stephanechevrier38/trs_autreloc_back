@@ -3,9 +3,10 @@
 const oracledb = require('oracledb');
 
 const config = {
-    user: "URIOS_INF",
-    password: "VALIDU",
-    connectString: "192.168.1.27:1526/URIOS",
+    user:           "URIOS_INF",
+    password:       "VALIDU",
+    connectString:  "192.168.1.27:1526/URIOS",    // Recette
+    // connectString:  "192.168.1.31:1526/URIOS",    // Production
 }
 
 // le module oracledb en mode thin ne fonctionne pas avec la version 11g de la Bdd Wintrans
@@ -15,7 +16,7 @@ const pathOracleClient = { libDir: "C:/appl/Urios/instantclient_23_5" };
 
 const wintrans = {
     connexion : {},
-    etat : 0
+    etat :      0
 }
 
 async function connecterWintrans() {
@@ -24,6 +25,7 @@ async function connecterWintrans() {
         oracledb.initOracleClient(pathOracleClient);
         wintrans.connexion = await oracledb.getConnection(config);
         wintrans.etat = 1;
+        console.log("Connexion wintrans Ok");
     } catch (e) {
         console.log('Erreur dans fonction AccessWintrans.ouvrirWintrans() : ' + e);
         wintrans.etat = -1;

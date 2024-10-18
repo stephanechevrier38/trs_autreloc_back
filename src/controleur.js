@@ -4,13 +4,14 @@ const {wintrans, connecterWintrans, deconnecterWintrans, executerSql} = require(
 
 const getEtatWintrans = ((req, res) => {
     console.log("Etat Connexion Wintrans = " + wintrans.etat);
-    envoyerResultat(String(wintrans.etat),res);
+    envoyerResultat(JSON.stringify({wintransEtat:wintrans.etat}),res);
 })
 
 const ouvrirWintrans = (async (req, res) => {
+    console.log("tentative connexion wintrans")
     await connecterWintrans();
     console.log("Etat Connexion Wintrans après ouverture = " + wintrans.etat);
-    envoyerResultat(String(wintrans.etat),res);
+    envoyerResultat(JSON.stringify({wintransEtat:wintrans.etat}),res);
 })
 
 const fermerWintrans = (async (req, res) => {
@@ -30,9 +31,9 @@ const getPays = (async (req, res) => {
 
 function envoyerResultat(resultat,res) {
     if (resultat !== undefined) {
-        res.status(200).send(resultat);
+        res.status(200).setHeader('Content-Type', 'application/json').send(resultat);
     } else {
-        res.status(400).send(undefined);
+        res.status(400).setHeader('Content-Type', 'application/json').send(undefined);
     }
 }
 
