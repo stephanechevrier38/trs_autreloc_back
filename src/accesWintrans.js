@@ -1,7 +1,8 @@
 'use strict';
 
 const oracledb = require('oracledb');
-
+const {enteteConsoleLog,log} = require('./logger');
+const enteteLog = new enteteConsoleLog("REC","Back", "Stephane","AccessWintrans");
 const config = {
     user:           "URIOS_INF",
     password:       "VALIDU",
@@ -14,9 +15,9 @@ const config = {
 // Quand wintrans sera en version 12, Client Oracle et la lignea ci-dessous ne devrait plus etre necessaire
 const pathOracleClient = { libDir: "C:/appl/Urios/instantclient_23_5" };
 
-const wintrans = {
+let wintrans = {
     connexion : {},
-    etat :      0
+    etat :      false
 }
 
 async function connecterWintrans() {
@@ -24,30 +25,30 @@ async function connecterWintrans() {
         // Quand wintrans sera en version 12, Client Oracle et la lignea ci-dessous ne devrait plus etre necessaire
         oracledb.initOracleClient(pathOracleClient);
         wintrans.connexion = await oracledb.getConnection(config);
-        wintrans.etat = 1;
-        console.log("Connexion wintrans Ok");
+        log("Connexion wintrans Ok", enteteLog);
+        return true;
     } catch (e) {
-        console.log('Erreur dans fonction AccessWintrans.ouvrirWintrans() : ' + e);
-        wintrans.etat = -1;
+        log("Erreur dans fonction AccessWintrans.ouvrirWintrans() : " + e, enteteLog);
+        return false;
     }
 }
 
 async function deconnecterWintrans() {
     try {
         await wintrans.connexion.close();
-        wintrans.etat = 0;
+        log("Connexion wintrans fermée", enteteLog);
+        return false;
     } catch (e) {
-        console.log('Erreur dans fonction AccessWintrans.fermerWintrans() : ' + e);
-        wintrans.etat = -1;
+        log("Erreur dans fonction AccessWintrans.fermerWintrans() : " + e, enteteLog);
+        return true;
     }
 }
 
 async function executerSql(requete) {
     try {
-        debugger;
         return await wintrans.connexion.execute(requete, [], {outFormat: oracledb.OUT_FORMAT_OBJECT});
     } catch (e) {
-        console.log('Erreur dans fonction AccessWintrans.executerSql() : ' + e);
+        log("Erreur dans fonction AccessWintrans.executerSql() : " + e, enteteLog);
         return {};
     }
 }

@@ -1,22 +1,23 @@
 'use strict';
 
-const {wintrans, connecterWintrans, deconnecterWintrans, executerSql} = require('./AccesWintrans');
+const {wintrans, connecterWintrans, deconnecterWintrans, executerSql} = require('./accesWintrans');
+const {enteteConsoleLog,log} = require('./logger');
+const enteteLog = new enteteConsoleLog("REC","Back", "Stephane","controleur");
 
 const getEtatWintrans = ((req, res) => {
-    console.log("Etat Connexion Wintrans = " + wintrans.etat);
+    log("Etat Connexion Wintrans = " + wintrans.etat, enteteLog);
     envoyerResultat(JSON.stringify({wintransEtat:wintrans.etat}),res);
 })
 
 const ouvrirWintrans = (async (req, res) => {
-    console.log("tentative connexion wintrans")
-    await connecterWintrans();
-    console.log("Etat Connexion Wintrans après ouverture = " + wintrans.etat);
+    log("tentative connexion wintrans", enteteLog)
+    wintrans.etat = await connecterWintrans();
     envoyerResultat(JSON.stringify({wintransEtat:wintrans.etat}),res);
 })
 
 const fermerWintrans = (async (req, res) => {
-    await deconnecterWintrans();
-    console.log("Etat Connexion Wintrans après fermeture = " + wintrans.etat);
+    log("tentative déconnexion wintrans", enteteLog)
+    wintrans.etat = await deconnecterWintrans();
     envoyerResultat(String(wintrans.etat),res);
 })
 
@@ -25,7 +26,7 @@ const getPays = (async (req, res) => {
                            "FROM LOCALITE " +
                            "WHERE NOID IN (SELECT DISTINCT NOID_LOCALITE FROM AUTRELOC)";
     const pays = JSON.stringify((await executerSql(requete)).rows);
-    console.log("Résultat requête : Pays = " + pays);
+    log("Résultat requête : Pays = " + pays, enteteLog);
     envoyerResultat(pays,res);
 })
 

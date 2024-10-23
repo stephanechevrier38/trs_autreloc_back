@@ -1,16 +1,19 @@
 'use strict';
 
+const {enteteConsoleLog,log} = require('./src/logger');
+
+const enteteLog = new enteteConsoleLog("REC","Back", "Stephane","main");
 const express = require("express");
-const app = express();
+const back = express();
 const cors = require("cors");
 const port = 3000;
 
 const products_routes = require('./src/routes.js');
 
-app.listen(port, () => {
-    console.log(`app listening on port ${port}!`);
+back.listen(port, () => {
+    log("Appli Back écoute sur le port " + port,enteteLog);
 });
 
-app.use(express.json());
-app.use(cors());
-app.use('/', products_routes);
+back.use(express.json());
+back.use(cors());
+back.use('/', products_routes);
